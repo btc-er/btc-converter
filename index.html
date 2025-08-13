@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BTC Converter</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    :root{--bg:#f6f8fb;--card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--dark:#0b1020;--darkLine:#1f2937;--darkText:#e2e8f0;--darkMuted:#94a3b8}
+    *{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--text);background:linear-gradient(#fff,var(--bg)) fixed}
+    .container{max-width:920px;margin:0 auto;padding:24px}
+    h1{margin:0 0 6px;font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.01em}
+    .sub{color:var(--muted);margin:0 0 24px}
+    .grid{display:grid;gap:14px}
+    @media(min-width:768px){.grid{grid-template-columns:repeat(3,1fr)}}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+    input[type="number"],select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:14px;outline:none}
+    input[type="number"]:focus,select:focus,button:focus{box-shadow:0 0 0 3px rgba(15,23,42,.08)}
+    .seg{display:flex;gap:8px}
+    .seg button{flex:1;cursor:pointer}
+    .seg .on{background:#111827;color:#fff;border-color:#111827}
+    .toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .muted{color:var(--muted)}
+    .result{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+    .big{font-size:clamp(22px,3.2vw,32px);font-weight:700}
+    .small{font-size:12px;color:var(--muted)}
+    .footer{margin-top:20px;text-align:center;font-size:11px;color:var(--muted)}
+    .row{display:flex;gap:10px;align-items:center}
+    .switch{display:inline-flex;gap:8px;align-items:center;cursor:pointer}
+    .btn{cursor:pointer}
+    .danger{color:#dc2626}
+    body.dark{background:linear-gradient(var(--dark),var(--dark)) fixed;color:var(--darkText)}
+    body.dark .card, body.dark .result{background:var(--dark);border:1px solid var(--darkLine);box-shadow:none}
+    body.dark .sub, body.dark .small, body.dark .muted{color:var(--darkMuted)}
+    body.dark input[type="number"], body.dark select, body.dark button{background:var(--dark);color:var(--darkText);border-color:var(--darkLine)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fiat → Bitcoin Converter</h1>
+    <p class="sub">Installable PWA. Live BTC pricing via Coinbase; enable Test Mode if your network blocks the API.</p>
+
+    <div class="grid" role="group" aria-label="Inputs">
+      <div class="card">
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" min="0" step="any" value="100" />
+      </div>
+      <div class="card">
+        <label for="fiat">Fiat currency</label>
+        <select id="fiat"></select>
+      </div>
+      <div class="card">
+        <label>Output unit</label>
+        <div class="seg">
+          <button id="btn-btc" class="btn on" type="button">BTC</button>
+          <button id="btn-sats" class="btn" type="button">sats</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="toolbar">
+        <div>
+          <div class="small">1 BTC ≈ <span id="oneBtc" style="font-weight:700;">—</span></div>
+          <div class="small" id="updated"></div>
+        </div>
+        <div class="row">
+          <label class="switch small"><input type="checkbox" id="autoref" checked> Auto-refresh (30s)</label>
+          <label class="switch small"><input type="checkbox" id="dark"> Dark</label>
+          <label class="switch small" title="Use mock price for offline/restricted environments"><input type="checkbox" id="test"> Test Mode</label>
+          <button id="refresh" class="btn" type="button" title="Refresh">↻ Refresh</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result" style="margin-top:14px">
+      <div class="big"><span id="fiatOut">—</span> = <span id="cryptoOut">—</span></div>
+      <div class="small" style="margin-top:10px" id="usingRate"></div>
+      <div class="small danger" id="err" hidden>Failed to fetch price. <button id="retry" class="btn" type="button">Try again</button></div>
+    </div>
+
+    <div class="footer">Install via Safari → Share → Add to Home Screen. Pricing is indicative only.</div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("service-worker.js").catch(()=>{});
+      });
+    }
+  </script>
+</body>
+</html>
