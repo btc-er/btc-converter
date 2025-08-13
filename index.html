@@ -6,6 +6,8 @@
   <title>BTC Converter</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="BTC Converter">
+  <meta name="theme-color" content="#0b1020">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <link rel="manifest" href="manifest.json">
   <style>
@@ -18,7 +20,8 @@
     @media(min-width:768px){.grid{grid-template-columns:repeat(3,1fr)}}
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
     label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
-    input[type="number"],select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:14px;outline:none}
+    /* iOS: keep font-size >= 16px to prevent focus-zoom */
+    input[type="number"],select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:16px;outline:none}
     input[type="number"]:focus,select:focus,button:focus{box-shadow:0 0 0 3px rgba(15,23,42,.08)}
     .seg{display:flex;gap:8px}
     .seg button{flex:1;cursor:pointer}
@@ -47,7 +50,8 @@
     <div class="grid" role="group" aria-label="Inputs">
       <div class="card">
         <label for="amount">Amount</label>
-        <input id="amount" type="number" min="0" step="any" value="100" />
+        <input id="amount" type="number" min="0" step="any" value="100"
+               inputmode="decimal" autocomplete="off" autocapitalize="off" />
       </div>
       <div class="card">
         <label for="fiat">Fiat currency</label>
@@ -72,6 +76,7 @@
           <label class="switch small"><input type="checkbox" id="autoref" checked> Auto-refresh (30s)</label>
           <label class="switch small"><input type="checkbox" id="dark"> Dark</label>
           <label class="switch small" title="Use mock price for offline/restricted environments"><input type="checkbox" id="test"> Test Mode</label>
+          <button id="scan" class="btn" type="button" title="Scan price with camera">📷 Scan price</button>
           <button id="refresh" class="btn" type="button" title="Refresh">↻ Refresh</button>
         </div>
       </div>
@@ -86,7 +91,33 @@
     <div class="footer">Install via Safari → Share → Add to Home Screen. Pricing is indicative only.</div>
   </div>
 
+  <!-- Camera / OCR modal -->
+  <style>
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,.6);
+             display: none; align-items: center; justify-content: center; z-index: 50; }
+    .modal.open { display: flex; }
+    .modal-card { background: #fff; border-radius: 16px; padding: 12px; max-width: 420px; width: 92%; }
+    body.dark .modal-card { background: #0b1020; border: 1px solid #1f2937; color: #e2e8f0; }
+    .modal video { width: 100%; border-radius: 12px; background: #000; }
+    .modal-actions { display: flex; gap: 10px; justify-content: space-between; margin-top: 10px; }
+    .modal-actions button { flex: 1; padding: 10px 12px; border-radius: 12px; border: 1px solid #e5e7eb; }
+    body.dark .modal-actions button { border-color: #1f2937; background: #0b1020; color: #e2e8f0; }
+  </style>
+
+  <div class="modal" id="scanModal" aria-hidden="true" role="dialog" aria-label="Scan price">
+    <div class="modal-card">
+      <video id="scanVideo" autoplay playsinline muted></video>
+      <div class="modal-actions">
+        <button id="scanClose" type="button">Close</button>
+        <button id="scanCapture" type="button">Capture</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load app AFTER modal so elements exist for querySelector -->
   <script src="app.js"></script>
+
+  <!-- Register service worker -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
@@ -94,5 +125,9 @@
       });
     }
   </script>
+  <!-- (Optional) If you keep this tag, the app will skip lazy-loading Tesseract.
+       Recommend removing it to save first-load bytes.
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+  -->
 </body>
 </html>
