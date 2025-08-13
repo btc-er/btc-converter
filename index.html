@@ -48,11 +48,14 @@
     <p class="sub">Live BTC pricing via Coinbase; enable Test Mode if your network blocks the API.</p>
 
     <div class="grid" role="group" aria-label="Inputs">
-      <<div class="card">
+      <div class="card">
         <label for="amount">Amount</label>
         <div style="display: flex; gap: 8px;">
-          <input id="amount" type="number" min="0" step="any" value="100" style="flex:1;" />
-          <button id="scan" class="btn" type="button" title="Scan price" style="padding:0 12px;font-size:18px;">📷</button>
+          <input id="amount" type="number" min="0" step="any" value="100"
+                 style="flex:1;"
+                 inputmode="decimal" autocomplete="off" autocapitalize="off" />
+          <button id="scan" class="btn" type="button" title="Scan price"
+                  style="padding:0 12px;font-size:18px;" aria-label="Scan price">📷</button>
         </div>
       </div>
       <div class="card">
