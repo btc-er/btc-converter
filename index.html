@@ -61,13 +61,13 @@
     body.dark .sub, body.dark .small, body.dark .muted{color:var(--darkMuted)}
     body.dark input[type="number"], body.dark select, body.dark button{background:var(--dark);color:var(--darkText);border-color:var(--darkLine)}
     #scan {
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:42px;       /* match input height */
-      line-height:1;
-      flex-shrink:0;     /* don't stretch */
-      font-size:18px;
+      height: 42px;           
+      line-height: 1;
+    }
+    body.dark #scan {
+      border-color: var(--darkLine);
+      background: var(--dark);
+      color: var(--darkText);
     }
   </style>
 </head>

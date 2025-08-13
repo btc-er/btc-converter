@@ -1,4 +1,4 @@
-const NAME="btcconv-v4";
+const NAME="btcconv-v6";
 const ASSETS=["./","index.html","app.js","manifest.json","icons/icon-180.png","icons/icon-192.png","icons/icon-512.png"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(NAME).then(c=>c.addAll(ASSETS))));
 self.addEventListener("activate",e=>e.waitUntil(
