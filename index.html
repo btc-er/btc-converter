@@ -12,7 +12,8 @@
   <link rel="manifest" href="manifest.json">
   <style>
     :root{--bg:#f6f8fb;--card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;--dark:#0b1020;--darkLine:#1f2937;--darkText:#e2e8f0;--darkMuted:#94a3b8}
-    *{box-sizing:border-box} html,body{height:100%} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--text);background:linear-gradient(#fff,var(--bg)) fixed}
+    *{box-sizing:border-box} html,body{height:100%}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:var(--text);background:linear-gradient(#fff,var(--bg)) fixed}
     .container{max-width:920px;margin:0 auto;padding:24px}
     h1{margin:0 0 6px;font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.01em}
     .sub{color:var(--muted);margin:0 0 24px}
@@ -21,8 +22,28 @@
     .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
     label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
     /* iOS: keep font-size >= 16px to prevent focus-zoom */
-    input[type="number"],select,button{width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:16px;outline:none}
-    input[type="number"]:focus,select:focus,button:focus{box-shadow:0 0 0 3px rgba(15,23,42,.08)}
+    input[type="number"], select {
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:16px;
+      outline:none;
+    }
+    button.btn {
+      width:auto;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:16px;
+      outline:none;
+      cursor:pointer;
+    }
+    input[type="number"]:focus, select:focus, button:focus {
+      box-shadow:0 0 0 3px rgba(15,23,42,.08)
+    }
     .seg{display:flex;gap:8px}
     .seg button{flex:1;cursor:pointer}
     .seg .on{background:#111827;color:#fff;border-color:#111827}
@@ -34,18 +55,26 @@
     .footer{margin-top:20px;text-align:center;font-size:11px;color:var(--muted)}
     .row{display:flex;gap:10px;align-items:center}
     .switch{display:inline-flex;gap:8px;align-items:center;cursor:pointer}
-    .btn{cursor:pointer}
     .danger{color:#dc2626}
     body.dark{background:linear-gradient(var(--dark),var(--dark)) fixed;color:var(--darkText)}
     body.dark .card, body.dark .result{background:var(--dark);border:1px solid var(--darkLine);box-shadow:none}
     body.dark .sub, body.dark .small, body.dark .muted{color:var(--darkMuted)}
     body.dark input[type="number"], body.dark select, body.dark button{background:var(--dark);color:var(--darkText);border-color:var(--darkLine)}
+    #scan {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:42px;       /* match input height */
+      line-height:1;
+      flex-shrink:0;     /* don't stretch */
+      font-size:18px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Fiat → Bitcoin Converter</h1>
-    <p class="sub">Live BTC pricing via Coinbase; enable Test Mode if your network blocks the API.</p>
+    <p class="sub">Live BTC pricing via Coinbase. Enable Test Mode if your network blocks the API.</p>
 
     <div class="grid" role="group" aria-label="Inputs">
       <div class="card">
@@ -54,8 +83,7 @@
           <input id="amount" type="number" min="0" step="any" value="100"
                  style="flex:1;"
                  inputmode="decimal" autocomplete="off" autocapitalize="off" />
-          <button id="scan" class="btn" type="button" title="Scan price"
-                  style="padding:0 12px;font-size:18px;" aria-label="Scan price">📷</button>
+          <button id="scan" class="btn" type="button" title="Scan price" aria-label="Scan price">📷</button>
         </div>
       </div>
       <div class="card">
@@ -119,7 +147,7 @@
   </div>
 
   <!-- Load app AFTER modal so elements exist for querySelector -->
-  <script src="app.js?v=2025-08-14"></script>
+  <script src="app.js?v=2025-08-14-1"></script>
 
   <!-- Register service worker -->
   <script>
